@@ -428,3 +428,23 @@ main,footer,section,.marquee{max-width:100%;overflow-x:clip}
 .bts-v .rec-dot{display:none}
 @media (max-width:860px){.bts-v{grid-column:span 6}.bts-p{grid-column:span 3;aspect-ratio:4/5}}
 @media (max-width:480px){.bts-p .kind{font-size:10px;letter-spacing:.1em}}
+
+/* ---------- crossed tapes (replaces flat marquee) ---------- */
+.tapes{position:relative;height:clamp(118px,13vw,170px);overflow:hidden;overflow:clip;margin-block:clamp(8px,2vw,20px)}
+.tape{position:absolute;left:-5%;right:-5%;top:50%;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.tape-front{transform:translateY(-50%) rotate(-2.2deg);background:var(--red);box-shadow:0 18px 40px -12px rgba(255,23,68,.55),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.18);z-index:2}
+.tape-back{transform:translateY(-50%) rotate(2.4deg);background:var(--ink-2);border-block:1px solid var(--ink-3);z-index:1}
+.tape-track{display:flex;align-items:center;width:max-content;animation:slide 40s linear infinite;will-change:transform}
+.tape-track.rev{animation-direction:reverse;animation-duration:55s}
+.tapes:hover .tape-track{animation-play-state:paused}
+.tape span{font-family:var(--display);font-weight:600;text-transform:uppercase;white-space:nowrap;line-height:1;letter-spacing:.02em}
+.tape-front span{font-size:clamp(22px,3vw,38px);padding:clamp(12px,1.4vw,18px) clamp(14px,1.6vw,22px)}
+.tape-front .t0{color:#fff}
+.tape-front .t1{color:transparent;-webkit-text-stroke:1.5px #fff}
+.tape-back span{font-size:clamp(16px,1.9vw,24px);padding:clamp(9px,1vw,12px) clamp(14px,1.6vw,22px);color:var(--muted)}
+.tape-back .t1{color:transparent;-webkit-text-stroke:1px var(--muted)}
+.tmark{width:clamp(22px,2.4vw,30px);height:clamp(22px,2.4vw,30px);flex:none;border-radius:6px;box-shadow:0 0 0 2px rgba(255,255,255,.9);animation:spin 8s linear infinite}
+.tdot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);flex:none}
+@keyframes spin{0%,70%{transform:rotate(0)}85%,100%{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.tape-track{animation:none}}
