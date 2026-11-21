@@ -166,5 +166,49 @@
     if(screen) screen.addEventListener('click', function(){ play() });
   });
 
+  /* intro: camera focus-lock, once per visit */
+  var intro = $('#intro');
+  if(intro){
+    var seen = false; try{ seen = sessionStorage.getItem('icubeIntro') === '1' }catch(e){}
+    var reduce2 = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(seen || reduce2){ intro.parentNode.removeChild(intro) }
+    else{
+      document.body.style.overflow = 'hidden';
+      var finish = function(){ intro.classList.add('zoom'); setTimeout(function(){ intro.classList.add('done'); document.body.style.overflow = ''; setTimeout(function(){ if(intro.parentNode) intro.parentNode.removeChild(intro) }, 700) }, 450) };
+      var t = setTimeout(finish, 2100);
+      intro.addEventListener('click', function(){ clearTimeout(t); finish() });
+      try{ sessionStorage.setItem('icubeIntro','1') }catch(e){}
+    }
+  }
+
+  /* viewfinder: running timecode + rotating status */
+  var tc = $('#tc'), vfMsg = $('#vfMsg');
+  if(tc){
+    var t0 = Date.now();
+    setInterval(function(){
+      var ms = Date.now() - t0, f = Math.floor(ms / 40) % 25, sec = Math.floor(ms / 1000);
+      var pad = function(n){ return (n < 10 ? '0' : '') + n };
+      tc.textContent = '00:' + pad(Math.floor(sec / 60) % 60) + ':' + pad(sec % 60) + ':' + pad(f);
+    }, 40);
+  }
+  if(vfMsg){
+    var msgs = ['Framing your story', 'Lighting the brand', 'Grading the colour', 'Cutting for Instagram', 'Ready to grow'], mi = 0;
+    setInterval(function(){ mi = (mi + 1) % msgs.length; vfMsg.textContent = msgs[mi] }, 3600);
+  }
+
+  /* scroll zoom on the hero frame */
+  var art = $('.hero-art');
+  if(art && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var ticking = false;
+    window.addEventListener('scroll', function(){
+      if(ticking) return; ticking = true;
+      requestAnimationFrame(function(){
+        var p = Math.min(Math.max(window.scrollY / 700, 0), 1);
+        art.style.transform = 'scale(' + (1 + p * .05).toFixed(3) + ') translateY(' + (p * -18).toFixed(1) + 'px)';
+        ticking = false;
+      });
+    }, {passive:true});
+  }
+
   var y = $('#yr'); if(y) y.textContent = new Date().getFullYear();
 })();
