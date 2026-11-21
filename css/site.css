@@ -543,3 +543,4 @@ main,footer,section,.marquee{max-width:100%;overflow-x:clip}
 .vf{bottom:66px}
 @media (max-width:520px){.hero-art .tag{display:none}.vf{top:-26px}}
 @media (max-width:520px){.vf{top:-10px}.hero-art .reel{padding-top:24px}}
+.hero-art .tag{display:none}
