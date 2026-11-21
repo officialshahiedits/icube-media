@@ -22,8 +22,10 @@
   if(drawer) drawer.addEventListener('click', function(e){ if(e.target === drawer) setDrawer(false) });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setDrawer(false) });
 
+  /* cinematic wipes on media blocks */
+  $$('.svc-media, .work, .poster, .bts-p, .bts-v, .aud-item, .fcard').forEach(function(el){ if(el.querySelector('img,video')) el.classList.add('wipe') });
   /* reveal on scroll */
-  var rv = $$('.rv, .kw');
+  var rv = $$('.rv, .kw, .wipe');
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(es){
       es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target) } });
@@ -182,13 +184,14 @@
   }
 
   /* viewfinder: running timecode + rotating status */
-  var tc = $('#tc'), vfMsg = $('#vfMsg');
-  if(tc){
+  var tcs = $$('.tc'), vfMsg = $('#vfMsg');
+  if(tcs.length){
     var t0 = Date.now();
     setInterval(function(){
       var ms = Date.now() - t0, f = Math.floor(ms / 40) % 25, sec = Math.floor(ms / 1000);
       var pad = function(n){ return (n < 10 ? '0' : '') + n };
-      tc.textContent = '00:' + pad(Math.floor(sec / 60) % 60) + ':' + pad(sec % 60) + ':' + pad(f);
+      var v = '00:' + pad(Math.floor(sec / 60) % 60) + ':' + pad(sec % 60) + ':' + pad(f);
+      tcs.forEach(function(el){ el.textContent = v });
     }, 40);
   }
   if(vfMsg){
