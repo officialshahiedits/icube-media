@@ -137,5 +137,34 @@
     });
   });
 
+  /* featured film: muted live preview when on screen, full film with sound on click */
+  $$('.film').forEach(function(f){
+    var id = f.getAttribute('data-id'), pv = f.querySelector('.film-preview'), screen = f.querySelector('.film-screen');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(pv && !reduce && 'IntersectionObserver' in window){
+      var fio = new IntersectionObserver(function(es){
+        es.forEach(function(e){
+          if(e.isIntersecting && !pv.src){ pv.src = pv.getAttribute('data-src'); pv.addEventListener('load', function(){ setTimeout(function(){ f.classList.add('playing-preview') }, 600) }) }
+        });
+      },{rootMargin:'200px'});
+      fio.observe(f);
+    }
+    function play(){
+      if(f.classList.contains('is-playing')) return;
+      var full = document.createElement('iframe');
+      full.className = 'film-full';
+      full.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      full.title = 'PPS Annual Function film';
+      full.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      full.setAttribute('allowfullscreen','');
+      screen.appendChild(full);
+      f.classList.add('is-playing');
+      if(pv){ pv.src = 'about:blank' }
+    }
+    var btn = f.querySelector('.film-play');
+    if(btn) btn.addEventListener('click', play);
+    if(screen) screen.addEventListener('click', function(){ play() });
+  });
+
   var y = $('#yr'); if(y) y.textContent = new Date().getFullYear();
 })();
