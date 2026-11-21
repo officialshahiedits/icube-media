@@ -580,3 +580,30 @@ main,footer,section,.marquee{max-width:100%;overflow-x:clip}
   .pvf .br,.pvf-focus{animation:none!important}
 }
 @media (max-width:700px){.phero .crumbs{margin-top:14px}}
+
+/* ===================== SEO landing pages ===================== */
+.lp-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,72px);align-items:start}
+.lp-copy p{color:var(--muted);font-size:clamp(16px,1.25vw,18px);line-height:1.7;margin:0 0 18px}
+.lp-copy h2{margin-bottom:22px}
+.lp-media{border-radius:22px;overflow:hidden;aspect-ratio:4/3;margin-bottom:18px}
+.lp-media img{width:100%;height:100%;object-fit:cover;display:block}
+.lp-card{border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:clamp(20px,2.4vw,30px);background:rgba(255,255,255,.03)}
+.lp-card h3{margin:0 0 12px;font-family:var(--display,inherit);font-size:20px}
+.rels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.rel{display:flex;align-items:center;gap:12px;padding:18px 20px;border-radius:18px;border:1px solid rgba(255,255,255,.12);color:inherit;text-decoration:none;font-weight:600;transition:border-color .3s,transform .3s}
+.rel span:nth-child(2){flex:1}
+.rel:hover{border-color:var(--red);transform:translateY(-3px)}
+.rel .ms:first-child,.hub a .ms:first-child{color:var(--red)}
+.hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(18px,3vw,36px)}
+.hub-col h3{font-size:18px;margin:0 0 14px;text-transform:uppercase;letter-spacing:.08em}
+.hub-col ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.hub a{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid rgba(127,127,127,.25);color:inherit;text-decoration:none;font-weight:600;transition:border-color .25s,background .25s}
+.hub a span:nth-child(2){flex:1}
+.hub a:hover{border-color:var(--red);background:rgba(255,15,60,.06)}
+.seo-links{display:flex;flex-wrap:wrap;gap:8px 18px;padding:22px 0;border-top:1px solid rgba(255,255,255,.08);margin-top:28px}
+.seo-links h4{width:100%;margin:0 0 6px}
+.seo-links a{color:var(--muted);font-size:14px;text-decoration:none}
+.seo-links a:hover{color:#fff}
+.sec-head p a{color:inherit;text-decoration:underline;text-decoration-color:var(--red)}
+@media (max-width:860px){.lp-grid{grid-template-columns:1fr}}
+.lp-hero h1{font-size:clamp(30px,8.2vw,104px)!important;overflow-wrap:normal;word-break:normal}
