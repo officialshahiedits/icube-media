@@ -1,3 +1,52 @@
+
+/* ===== WhatsApp direct open (iCube Media) =====
+   Every wa.me / api.whatsapp.com link on the page:
+   - Phone (Android / iPhone): opens the WhatsApp app straight to the chat (no wa.me "Continue to chat" page)
+   - Laptop / PC: opens WhatsApp Web straight to the chat in a new tab (no "Open WhatsApp?" popup)
+   If the app is not installed on the phone, it falls back to WhatsApp in the browser. */
+(function(){
+  var WA_RE = /^https?:\/\/(wa\.me|api\.whatsapp\.com|(www\.)?whatsapp\.com)\//i;
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent) ||
+                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); /* iPadOS */
+
+  function parse(href){
+    var u; try{ u = new URL(href) }catch(e){ return null }
+    var phone = '', text = u.searchParams.get('text') || '';
+    if(/wa\.me$/i.test(u.hostname)) phone = u.pathname.replace(/\D/g,'');
+    else phone = (u.searchParams.get('phone') || '').replace(/\D/g,'');
+    if(!phone) return null;
+    return { phone: phone, text: text };
+  }
+
+  function q(d){ return 'phone=' + d.phone + (d.text ? '&text=' + encodeURIComponent(d.text) : '') }
+
+  document.addEventListener('click', function(e){
+    if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest ? e.target.closest('a[href]') : null;
+    if(!a || !WA_RE.test(a.href)) return;
+    var d = parse(a.href); if(!d) return;
+    e.preventDefault();
+
+    if(isMobile){
+      /* open the app directly */
+      var left = false;
+      function gone(){ left = true }
+      document.addEventListener('visibilitychange', gone, {once:true});
+      window.addEventListener('pagehide', gone, {once:true});
+      window.addEventListener('blur', gone, {once:true});
+      window.location.href = 'whatsapp://send?' + q(d);
+      /* app not installed or blocked (e.g. some in-app browsers) -> browser fallback */
+      setTimeout(function(){
+        if(!left && !document.hidden) window.location.href = 'https://api.whatsapp.com/send?' + q(d);
+      }, 1600);
+    } else {
+      /* laptop / PC: WhatsApp Web straight to the chat, no app popup */
+      var url = 'https://web.whatsapp.com/send?' + q(d);
+      var w = window.open(url, '_blank');
+      if(w){ try{ w.opener = null }catch(err){} } else { window.location.href = url }
+    }
+  }, false);
+})();
 (function(){
   document.documentElement.classList.remove('no-js');
   /* every page opens at the top, not mid-page or shifted sideways */
